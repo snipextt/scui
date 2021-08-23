@@ -1,7 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { mergeStyles, initializeIcons } from '@fluentui/react';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+initializeIcons();
+
+mergeStyles({
+  ':global(body,html,#root)': {
+    margin: 0,
+    padding: 0,
+    height: '100vh',
+  },
+});
 
 ReactDOM.render(
   <React.StrictMode>
