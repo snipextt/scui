@@ -1,6 +1,12 @@
 import { IStackStyles, Stack } from '@fluentui/react';
 import React from 'react';
-import { Auth } from './Pages';
+import { Auth, Dashboard } from './Pages';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
 
 const rootStyles: Partial<IStackStyles> = {
   root: {
@@ -10,9 +16,21 @@ const rootStyles: Partial<IStackStyles> = {
 
 function App() {
   return (
-    <Stack styles={rootStyles} className="App">
-      <Auth />
-    </Stack>
+    <Router>
+      <Stack styles={rootStyles} className="App">
+        <Switch>
+          <Route exact path="/">
+            <Redirect to="/auth" />
+          </Route>
+          <Route path="/auth">
+            <Auth />
+          </Route>
+          <Route exact path="/dashboard">
+            <Dashboard />
+          </Route>
+        </Switch>
+      </Stack>
+    </Router>
   );
 }
 
