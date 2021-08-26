@@ -1,3 +1,3 @@
 import Login from './Login';
-
-export { Login };
+import Navbar from './Navbar';
+export { Login, Navbar };

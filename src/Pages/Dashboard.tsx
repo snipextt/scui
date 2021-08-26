@@ -1,6 +1,8 @@
 import { IStackStyles, Stack } from '@fluentui/react';
 import React from 'react';
-import Navbar from '../Components/Navbar';
+import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
+import { Classroom, Labs, Recordings, Assignments, Teachers } from '.';
+import { Navbar } from '../Components/';
 
 const rootStyles: Partial<IStackStyles> = {
   root: {
@@ -10,10 +12,38 @@ const rootStyles: Partial<IStackStyles> = {
 };
 
 const Dashboard: React.FC = () => {
+  const { path, url } = useRouteMatch();
   return (
     <>
-      <Stack styles={rootStyles}>
+      <Stack
+        styles={rootStyles}
+        tokens={{
+          childrenGap: 20,
+        }}
+      >
         <Navbar />
+        <Switch>
+          <Route exact path={path}>
+            <Redirect
+              to={`${url}${url.endsWith('/') ? 'classroom' : '/classroom'}`}
+            />
+          </Route>
+          <Route path={`${path}/classroom`}>
+            <Classroom />
+          </Route>
+          <Route exact path={`${path}/assignments`}>
+            <Assignments />
+          </Route>
+          <Route exact path={`${path}/teachers`}>
+            <Teachers />
+          </Route>
+          <Route exact path={`${path}/labs`}>
+            <Labs />
+          </Route>
+          <Route exact path={`${path}/recordings`}>
+            <Recordings />
+          </Route>
+        </Switch>
       </Stack>
     </>
   );

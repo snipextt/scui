@@ -25,7 +25,7 @@ function App() {
           <Route path="/auth">
             <Auth />
           </Route>
-          <Route exact path="/dashboard">
+          <Route path="/dashboard">
             <Dashboard />
           </Route>
         </Switch>

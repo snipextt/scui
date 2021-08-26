@@ -5,7 +5,6 @@ import ForgotPassword from '../Components/Forgot';
 
 const Auth: React.FC = () => {
   const { path, url } = useRouteMatch();
-  console.log(path, url);
   return (
     <>
       <Switch>

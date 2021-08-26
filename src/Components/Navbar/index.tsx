@@ -1,9 +1,6 @@
 import {
   ContextualMenu,
-  ContextualMenuItemType,
   Icon,
-  IContextualMenuProps,
-  IPersonaSharedProps,
   Persona,
   PersonaInitialsColor,
   PersonaSize,
@@ -12,84 +9,24 @@ import {
   Pivot,
   PivotItem,
 } from '@fluentui/react';
-import { useConst } from '@fluentui/react-hooks';
 import React, { useRef, useState } from 'react';
+import { useHistory, useLocation } from 'react-router';
 import {
   NavbarStyles,
   logoStyles,
   NotificationStyles,
   iconClass,
 } from './styles';
+import { createPersona, handleNavbarLinkClick, useMenuProps } from './utils';
 
 const Navbar: React.FC = () => {
   const personaRef = useRef<any>(null);
   const [profileContextMenuVisible, setProfileContextMenuVisible] =
     useState(false);
-  const profilePersona: IPersonaSharedProps = {
-    imageInitials: 'S',
-    text: 'Saurav',
-    ref: personaRef,
-    secondaryText: 'Software Engineer',
-  };
-  const menuProps = useConst<IContextualMenuProps>(() => ({
-    gapSpace: 20,
-    shouldFocusOnMount: true,
-    target: personaRef,
-    items: [
-      {
-        key: 'Actions',
-        itemType: ContextualMenuItemType.Header,
-        text: 'Actions',
-        itemProps: { lang: 'en-us' },
-      },
-      {
-        key: 'upload',
-        iconProps: { iconName: 'Upload', style: { color: 'salmon' } },
-        text: 'Upload',
-        title: 'Upload a file',
-      },
-      { key: 'rename', text: 'Rename' },
-      {
-        key: 'share',
-        iconProps: { iconName: 'Share' },
-        subMenuProps: {
-          items: [
-            {
-              key: 'sharetoemail',
-              text: 'Share to Email',
-              iconProps: { iconName: 'Ringer' },
-            },
-            {
-              key: 'sharetofacebook',
-              text: 'Share to Facebook',
-              iconProps: { iconName: 'Share' },
-            },
-            {
-              key: 'sharetotwitter',
-              text: 'Share to Twitter',
-              iconProps: { iconName: 'Share' },
-            },
-          ],
-        },
-        text: 'Sharing',
-        ariaLabel:
-          'Sharing. Press enter, space or right arrow keys to open submenu.',
-      },
-      {
-        key: 'navigation',
-        itemType: ContextualMenuItemType.Header,
-        text: 'Navigation',
-      },
-      { key: 'properties', text: 'Properties' },
-      { key: 'print', iconProps: { iconName: 'Print' }, text: 'Print' },
-      {
-        key: 'Bing',
-        text: 'Go to Bing',
-        href: 'http://www.bing.com',
-        target: '_blank',
-      },
-    ],
-  }));
+  const profilePersona = createPersona(personaRef);
+  const menuProps = useMenuProps(personaRef);
+  const location = useLocation();
+  const history = useHistory();
   return (
     <Stack styles={NavbarStyles} horizontal>
       <Stack horizontal>
@@ -98,13 +35,30 @@ const Navbar: React.FC = () => {
       <Stack horizontal>
         <Pivot
           aria-label="Large Link Size Pivot Example"
-          defaultSelectedKey="labs"
+          defaultSelectedKey={location.pathname.split('/')[2]}
+          onLinkClick={(e) => handleNavbarLinkClick(e, history)}
         >
-          <PivotItem headerText="Classroom" key="classroom"></PivotItem>
-          <PivotItem headerText="Assignments" key="assignments"></PivotItem>
-          <PivotItem headerText="Teachers" key="teachers"></PivotItem>
+          <PivotItem
+            headerText="Classroom"
+            itemKey="classroom"
+            key="classroom"
+          ></PivotItem>
+          <PivotItem
+            headerText="Assignments"
+            itemKey="assignments"
+            key="assignments"
+          ></PivotItem>
+          <PivotItem
+            headerText="Teachers"
+            itemKey="teachers"
+            key="teachers"
+          ></PivotItem>
           <PivotItem headerText="Labs" itemKey="labs" key="labs"></PivotItem>
-          <PivotItem headerText="Recordings" key="recordings"></PivotItem>
+          <PivotItem
+            headerText="Recordings"
+            itemKey="recordings"
+            key="recordings"
+          ></PivotItem>
         </Pivot>
       </Stack>
       <Stack horizontal>
