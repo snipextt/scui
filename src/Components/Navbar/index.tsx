@@ -1,45 +1,25 @@
 import {
   ContextualMenu,
   ContextualMenuItemType,
-  mergeStyles,
   Icon,
   IContextualMenuProps,
   IPersonaSharedProps,
-  IStackStyles,
   Persona,
   PersonaInitialsColor,
   PersonaSize,
   Stack,
+  Text,
+  Pivot,
+  PivotItem,
 } from '@fluentui/react';
 import { useConst } from '@fluentui/react-hooks';
 import React, { useRef, useState } from 'react';
-
-const NavbarStyles: Partial<IStackStyles> = {
-  root: {
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    paddingLeft: 60,
-    paddingRight: 60,
-    background: '#fff',
-    width: '100%',
-  },
-};
-
-const NotificationStyles: Partial<IStackStyles> = {
-  root: {
-    borderRadius: '50%',
-    border: '1px solid grey',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 14,
-    padding: 9,
-  },
-};
-
-const iconClass = mergeStyles({
-  fontSize: 20,
-});
+import {
+  NavbarStyles,
+  logoStyles,
+  NotificationStyles,
+  iconClass,
+} from './styles';
 
 const Navbar: React.FC = () => {
   const personaRef = useRef<any>(null);
@@ -112,7 +92,21 @@ const Navbar: React.FC = () => {
   }));
   return (
     <Stack styles={NavbarStyles} horizontal>
-      <Stack></Stack>
+      <Stack horizontal>
+        <Text styles={logoStyles}>Startup Hai</Text>
+      </Stack>
+      <Stack horizontal>
+        <Pivot
+          aria-label="Large Link Size Pivot Example"
+          defaultSelectedKey="labs"
+        >
+          <PivotItem headerText="Classroom" key="classroom"></PivotItem>
+          <PivotItem headerText="Assignments" key="assignments"></PivotItem>
+          <PivotItem headerText="Teachers" key="teachers"></PivotItem>
+          <PivotItem headerText="Labs" itemKey="labs" key="labs"></PivotItem>
+          <PivotItem headerText="Recordings" key="recordings"></PivotItem>
+        </Pivot>
+      </Stack>
       <Stack horizontal>
         <Stack styles={NotificationStyles}>
           <Icon iconName="Ringer" className={iconClass} />
