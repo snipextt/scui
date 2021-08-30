@@ -9,6 +9,7 @@ const NavbarStyles: Partial<IStackStyles> = {
     paddingRight: '10%',
     background: '#fff',
     width: '100%',
+    boxShadow: 'rgba(0, 0, 0, 0.11) 0px 2px  2px',
   },
 };
 
