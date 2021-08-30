@@ -12,7 +12,10 @@ import {
   Stack,
   IDocumentCardPreviewProps,
   mergeStyles,
-  ScrollablePane,
+  Calendar,
+  defaultCalendarStrings,
+  IStackTokens,
+  Separator,
 } from '@fluentui/react';
 import React from 'react';
 import { SectionHeading } from '../Components/Typography';
@@ -20,12 +23,12 @@ import { SectionHeading } from '../Components/Typography';
 const rootStyles: Partial<IStackStyles> = {
   root: {
     alignItems: 'center',
+    paddingBottom: '1.5rem',
   },
 };
 
-const timeTableSectionStyles: Partial<IStackStyles> = {
+const SectionStyles: Partial<IStackStyles> = {
   root: {
-    paddingTop: '1.5rem',
     width: '75%',
     justifyContent: 'flex-start',
   },
@@ -91,11 +94,15 @@ const classroomPreviewStyles = mergeStyles(timeTableCardStyle.root, {
   },
 });
 
+const SectionTokens: IStackTokens = {
+  childrenGap: 15,
+};
+
 const Classroom: React.FC = () => {
-  console.log(classroomPreviewStyles);
+  const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
   return (
-    <Stack styles={rootStyles}>
-      <Stack styles={timeTableSectionStyles} tokens={{ childrenGap: 15 }}>
+    <Stack styles={rootStyles} tokens={{ childrenGap: 30 }}>
+      <Stack styles={SectionStyles} tokens={SectionTokens}>
         <SectionHeading title="Upcoming Classes" align="left" />
         <Stack horizontal style={{ position: 'relative' }}>
           <Stack
@@ -104,9 +111,110 @@ const Classroom: React.FC = () => {
               root: {
                 maxWidth: '100%',
                 overflow: 'auto',
+                paddingTop: 20,
+                paddingBottom: 20,
               },
             }}
           >
+            <DocumentCard
+              className={classroomPreviewStyles}
+              type={DocumentCardType.compact}
+              aria-label="Upcomimng classes"
+            >
+              <DocumentCardPreview {...previewPropsUsingIcon} />
+              <DocumentCardDetails>
+                <DocumentCardTitle title="Maths Class" />
+                <DocumentCardActivity
+                  activity="Meeting at 11:30 AM"
+                  people={[{ name: 'Teacher name', profileImageSrc: '' }]}
+                />
+                <DocumentCardActions actions={documentCardActions} views={1} />
+              </DocumentCardDetails>
+            </DocumentCard>
+            <DocumentCard
+              className={classroomPreviewStyles}
+              type={DocumentCardType.compact}
+              aria-label="Upcomimng classes"
+            >
+              <DocumentCardPreview {...previewPropsUsingIcon} />
+              <DocumentCardDetails>
+                <DocumentCardTitle title="Maths Class" />
+                <DocumentCardActivity
+                  activity="Meeting at 11:30 AM"
+                  people={[{ name: 'Teacher name', profileImageSrc: '' }]}
+                />
+                <DocumentCardActions actions={documentCardActions} views={1} />
+              </DocumentCardDetails>
+            </DocumentCard>
+            <DocumentCard
+              className={classroomPreviewStyles}
+              type={DocumentCardType.compact}
+              aria-label="Upcomimng classes"
+            >
+              <DocumentCardPreview {...previewPropsUsingIcon} />
+              <DocumentCardDetails>
+                <DocumentCardTitle title="Maths Class" />
+                <DocumentCardActivity
+                  activity="Meeting at 11:30 AM"
+                  people={[{ name: 'Teacher name', profileImageSrc: '' }]}
+                />
+                <DocumentCardActions actions={documentCardActions} views={1} />
+              </DocumentCardDetails>
+            </DocumentCard>
+            <DocumentCard
+              className={classroomPreviewStyles}
+              type={DocumentCardType.compact}
+              aria-label="Upcomimng classes"
+            >
+              <DocumentCardPreview {...previewPropsUsingIcon} />
+              <DocumentCardDetails>
+                <DocumentCardTitle title="Maths Class" />
+                <DocumentCardActivity
+                  activity="Meeting at 11:30 AM"
+                  people={[{ name: 'Teacher name', profileImageSrc: '' }]}
+                />
+                <DocumentCardActions actions={documentCardActions} views={1} />
+              </DocumentCardDetails>
+            </DocumentCard>
+          </Stack>
+        </Stack>
+      </Stack>
+      <Stack styles={SectionStyles} tokens={SectionTokens}>
+        <SectionHeading title="Time Table" align="left" />
+        <Stack horizontal>
+          <Calendar
+            showGoToToday
+            showMonthPickerAsOverlay
+            onSelectDate={setSelectedDate}
+            value={selectedDate}
+            // Calendar uses English strings by default. For localized apps, you must override this prop.
+            strings={defaultCalendarStrings}
+          />
+          <Separator vertical />
+          <Stack
+            horizontal
+            styles={{
+              root: {
+                overflow: 'auto',
+                alignItems: 'center',
+              },
+            }}
+          >
+            <DocumentCard
+              className={classroomPreviewStyles}
+              type={DocumentCardType.compact}
+              aria-label="Upcomimng classes"
+            >
+              <DocumentCardPreview {...previewPropsUsingIcon} />
+              <DocumentCardDetails>
+                <DocumentCardTitle title="Maths Class" />
+                <DocumentCardActivity
+                  activity="Meeting at 11:30 AM"
+                  people={[{ name: 'Teacher name', profileImageSrc: '' }]}
+                />
+                <DocumentCardActions actions={documentCardActions} views={1} />
+              </DocumentCardDetails>
+            </DocumentCard>
             <DocumentCard
               className={classroomPreviewStyles}
               type={DocumentCardType.compact}
