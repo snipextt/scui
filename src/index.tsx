@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { mergeStyles, initializeIcons } from '@fluentui/react';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import 'simplebar/dist/simplebar.min.css';
 
 initializeIcons();
 

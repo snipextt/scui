@@ -19,6 +19,7 @@ import {
 } from '@fluentui/react';
 import React from 'react';
 import { SectionHeading } from '../Components/Typography';
+import SimpleBar from 'simplebar-react';
 
 const rootStyles: Partial<IStackStyles> = {
   root: {
@@ -80,6 +81,7 @@ const timeTableCardStyle: Partial<IStackStyles> = {
   root: {
     width: 360,
     minWidth: 360,
+    cursor: 'pointer',
     height: 120,
     marginRight: '1rem',
   },
@@ -98,86 +100,91 @@ const SectionTokens: IStackTokens = {
   childrenGap: 15,
 };
 
+const scrollSectionStyles = mergeStyles({
+  '.simplebar-content': {
+    display: 'flex',
+    alignItems: 'center',
+    height: '100%',
+    paddingLeft: '20px',
+  },
+});
+
 const Classroom: React.FC = () => {
   const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
   return (
-    <Stack styles={rootStyles} tokens={{ childrenGap: 30 }}>
+    <Stack styles={rootStyles} tokens={{ childrenGap: 40 }}>
       <Stack styles={SectionStyles} tokens={SectionTokens}>
         <SectionHeading title="Upcoming Classes" align="left" />
-        <Stack horizontal style={{ position: 'relative' }}>
-          <Stack
-            horizontal
-            styles={{
-              root: {
-                maxWidth: '100%',
-                overflow: 'auto',
-                paddingTop: 20,
-                paddingBottom: 20,
-              },
-            }}
+        {/* <Stack horizontal> */}
+        <SimpleBar
+          className={scrollSectionStyles}
+          style={{
+            maxWidth: '100%',
+            height: 180,
+          }}
+        >
+          <DocumentCard
+            className={classroomPreviewStyles}
+            type={DocumentCardType.compact}
+            aria-label="Upcomimng classes"
           >
-            <DocumentCard
-              className={classroomPreviewStyles}
-              type={DocumentCardType.compact}
-              aria-label="Upcomimng classes"
-            >
-              <DocumentCardPreview {...previewPropsUsingIcon} />
-              <DocumentCardDetails>
-                <DocumentCardTitle title="Maths Class" />
-                <DocumentCardActivity
-                  activity="Meeting at 11:30 AM"
-                  people={[{ name: 'Teacher name', profileImageSrc: '' }]}
-                />
-                <DocumentCardActions actions={documentCardActions} views={1} />
-              </DocumentCardDetails>
-            </DocumentCard>
-            <DocumentCard
-              className={classroomPreviewStyles}
-              type={DocumentCardType.compact}
-              aria-label="Upcomimng classes"
-            >
-              <DocumentCardPreview {...previewPropsUsingIcon} />
-              <DocumentCardDetails>
-                <DocumentCardTitle title="Maths Class" />
-                <DocumentCardActivity
-                  activity="Meeting at 11:30 AM"
-                  people={[{ name: 'Teacher name', profileImageSrc: '' }]}
-                />
-                <DocumentCardActions actions={documentCardActions} views={1} />
-              </DocumentCardDetails>
-            </DocumentCard>
-            <DocumentCard
-              className={classroomPreviewStyles}
-              type={DocumentCardType.compact}
-              aria-label="Upcomimng classes"
-            >
-              <DocumentCardPreview {...previewPropsUsingIcon} />
-              <DocumentCardDetails>
-                <DocumentCardTitle title="Maths Class" />
-                <DocumentCardActivity
-                  activity="Meeting at 11:30 AM"
-                  people={[{ name: 'Teacher name', profileImageSrc: '' }]}
-                />
-                <DocumentCardActions actions={documentCardActions} views={1} />
-              </DocumentCardDetails>
-            </DocumentCard>
-            <DocumentCard
-              className={classroomPreviewStyles}
-              type={DocumentCardType.compact}
-              aria-label="Upcomimng classes"
-            >
-              <DocumentCardPreview {...previewPropsUsingIcon} />
-              <DocumentCardDetails>
-                <DocumentCardTitle title="Maths Class" />
-                <DocumentCardActivity
-                  activity="Meeting at 11:30 AM"
-                  people={[{ name: 'Teacher name', profileImageSrc: '' }]}
-                />
-                <DocumentCardActions actions={documentCardActions} views={1} />
-              </DocumentCardDetails>
-            </DocumentCard>
-          </Stack>
-        </Stack>
+            <DocumentCardPreview {...previewPropsUsingIcon} />
+            <DocumentCardDetails>
+              <DocumentCardTitle title="Maths Class" />
+              <DocumentCardActivity
+                activity="Meeting at 11:30 AM"
+                people={[{ name: 'Teacher name', profileImageSrc: '' }]}
+              />
+              <DocumentCardActions actions={documentCardActions} views={1} />
+            </DocumentCardDetails>
+          </DocumentCard>
+          <DocumentCard
+            className={classroomPreviewStyles}
+            type={DocumentCardType.compact}
+            aria-label="Upcomimng classes"
+          >
+            <DocumentCardPreview {...previewPropsUsingIcon} />
+            <DocumentCardDetails>
+              <DocumentCardTitle title="Maths Class" />
+              <DocumentCardActivity
+                activity="Meeting at 11:30 AM"
+                people={[{ name: 'Teacher name', profileImageSrc: '' }]}
+              />
+              <DocumentCardActions actions={documentCardActions} views={1} />
+            </DocumentCardDetails>
+          </DocumentCard>
+          <DocumentCard
+            className={classroomPreviewStyles}
+            type={DocumentCardType.compact}
+            aria-label="Upcomimng classes"
+          >
+            <DocumentCardPreview {...previewPropsUsingIcon} />
+            <DocumentCardDetails>
+              <DocumentCardTitle title="Maths Class" />
+              <DocumentCardActivity
+                activity="Meeting at 11:30 AM"
+                people={[{ name: 'Teacher name', profileImageSrc: '' }]}
+              />
+              <DocumentCardActions actions={documentCardActions} views={1} />
+            </DocumentCardDetails>
+          </DocumentCard>
+          <DocumentCard
+            className={classroomPreviewStyles}
+            type={DocumentCardType.compact}
+            aria-label="Upcomimng classes"
+          >
+            <DocumentCardPreview {...previewPropsUsingIcon} />
+            <DocumentCardDetails>
+              <DocumentCardTitle title="Maths Class" />
+              <DocumentCardActivity
+                activity="Meeting at 11:30 AM"
+                people={[{ name: 'Teacher name', profileImageSrc: '' }]}
+              />
+              <DocumentCardActions actions={documentCardActions} views={1} />
+            </DocumentCardDetails>
+          </DocumentCard>
+        </SimpleBar>
+        {/* </Stack> */}
       </Stack>
       <Stack styles={SectionStyles} tokens={SectionTokens}>
         <SectionHeading title="Time Table" align="left" />
@@ -191,13 +198,14 @@ const Classroom: React.FC = () => {
             strings={defaultCalendarStrings}
           />
           <Separator vertical />
-          <Stack
-            horizontal
-            styles={{
-              root: {
-                overflow: 'auto',
-                alignItems: 'center',
-              },
+          <Separator vertical />
+          <Separator vertical />
+
+          <SimpleBar
+            className={scrollSectionStyles}
+            style={{
+              width: '100%',
+              height: '100%',
             }}
           >
             <DocumentCard
@@ -230,37 +238,7 @@ const Classroom: React.FC = () => {
                 <DocumentCardActions actions={documentCardActions} views={1} />
               </DocumentCardDetails>
             </DocumentCard>
-            <DocumentCard
-              className={classroomPreviewStyles}
-              type={DocumentCardType.compact}
-              aria-label="Upcomimng classes"
-            >
-              <DocumentCardPreview {...previewPropsUsingIcon} />
-              <DocumentCardDetails>
-                <DocumentCardTitle title="Maths Class" />
-                <DocumentCardActivity
-                  activity="Meeting at 11:30 AM"
-                  people={[{ name: 'Teacher name', profileImageSrc: '' }]}
-                />
-                <DocumentCardActions actions={documentCardActions} views={1} />
-              </DocumentCardDetails>
-            </DocumentCard>
-            <DocumentCard
-              className={classroomPreviewStyles}
-              type={DocumentCardType.compact}
-              aria-label="Upcomimng classes"
-            >
-              <DocumentCardPreview {...previewPropsUsingIcon} />
-              <DocumentCardDetails>
-                <DocumentCardTitle title="Maths Class" />
-                <DocumentCardActivity
-                  activity="Meeting at 11:30 AM"
-                  people={[{ name: 'Teacher name', profileImageSrc: '' }]}
-                />
-                <DocumentCardActions actions={documentCardActions} views={1} />
-              </DocumentCardDetails>
-            </DocumentCard>
-          </Stack>
+          </SimpleBar>
         </Stack>
       </Stack>
       <Stack styles={SectionStyles} tokens={SectionTokens}>
@@ -270,11 +248,12 @@ const Classroom: React.FC = () => {
           styles={{
             root: {
               justifyContent: 'center',
+              paddingTop: 10,
             },
           }}
         >
           <SectionHeading
-            title="No assignments to show"
+            title="No assignments to display"
             align="center"
             color="gray"
           />
