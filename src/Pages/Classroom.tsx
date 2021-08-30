@@ -263,6 +263,23 @@ const Classroom: React.FC = () => {
           </Stack>
         </Stack>
       </Stack>
+      <Stack styles={SectionStyles} tokens={SectionTokens}>
+        <SectionHeading title="Pending Assignments" align="left" />
+        <Stack
+          horizontal
+          styles={{
+            root: {
+              justifyContent: 'center',
+            },
+          }}
+        >
+          <SectionHeading
+            title="No assignments to show"
+            align="center"
+            color="gray"
+          />
+        </Stack>
+      </Stack>
     </Stack>
   );
 };
