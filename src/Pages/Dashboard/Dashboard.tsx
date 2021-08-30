@@ -1,8 +1,8 @@
 import { IStackStyles, Stack } from '@fluentui/react';
 import React from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
-import { Classroom, Labs, Recordings, Assignments, Teachers } from '.';
-import { Navbar } from '../Components/';
+import { Classroom, Labs, Recordings, Assignments, Teachers } from '..';
+import { Navbar } from '../../Components';
 
 const rootStyles: Partial<IStackStyles> = {
   root: {

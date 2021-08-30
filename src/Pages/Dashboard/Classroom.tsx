@@ -18,7 +18,7 @@ import {
   Separator,
 } from '@fluentui/react';
 import React from 'react';
-import { SectionHeading } from '../Components/Typography';
+import { SectionHeading } from '../../Components/Typography';
 import SimpleBar from 'simplebar-react';
 
 const rootStyles: Partial<IStackStyles> = {
@@ -132,7 +132,7 @@ const Classroom: React.FC = () => {
             <DocumentCardDetails>
               <DocumentCardTitle title="Maths Class" />
               <DocumentCardActivity
-                activity="Meeting at 11:30 AM"
+                activity="Class at 11:30 AM"
                 people={[{ name: 'Teacher name', profileImageSrc: '' }]}
               />
               <DocumentCardActions actions={documentCardActions} views={1} />
@@ -147,7 +147,7 @@ const Classroom: React.FC = () => {
             <DocumentCardDetails>
               <DocumentCardTitle title="Maths Class" />
               <DocumentCardActivity
-                activity="Meeting at 11:30 AM"
+                activity="Class at 11:30 AM"
                 people={[{ name: 'Teacher name', profileImageSrc: '' }]}
               />
               <DocumentCardActions actions={documentCardActions} views={1} />
@@ -162,7 +162,7 @@ const Classroom: React.FC = () => {
             <DocumentCardDetails>
               <DocumentCardTitle title="Maths Class" />
               <DocumentCardActivity
-                activity="Meeting at 11:30 AM"
+                activity="Class at 11:30 AM"
                 people={[{ name: 'Teacher name', profileImageSrc: '' }]}
               />
               <DocumentCardActions actions={documentCardActions} views={1} />
@@ -177,7 +177,7 @@ const Classroom: React.FC = () => {
             <DocumentCardDetails>
               <DocumentCardTitle title="Maths Class" />
               <DocumentCardActivity
-                activity="Meeting at 11:30 AM"
+                activity="Class at 11:30 AM"
                 people={[{ name: 'Teacher name', profileImageSrc: '' }]}
               />
               <DocumentCardActions actions={documentCardActions} views={1} />
@@ -217,7 +217,7 @@ const Classroom: React.FC = () => {
               <DocumentCardDetails>
                 <DocumentCardTitle title="Maths Class" />
                 <DocumentCardActivity
-                  activity="Meeting at 11:30 AM"
+                  activity="Class at 11:30 AM"
                   people={[{ name: 'Teacher name', profileImageSrc: '' }]}
                 />
                 <DocumentCardActions actions={documentCardActions} views={1} />
@@ -232,7 +232,7 @@ const Classroom: React.FC = () => {
               <DocumentCardDetails>
                 <DocumentCardTitle title="Maths Class" />
                 <DocumentCardActivity
-                  activity="Meeting at 11:30 AM"
+                  activity="Class at 11:30 AM"
                   people={[{ name: 'Teacher name', profileImageSrc: '' }]}
                 />
                 <DocumentCardActions actions={documentCardActions} views={1} />
