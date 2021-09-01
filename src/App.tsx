@@ -1,6 +1,6 @@
 import { IStackStyles, Stack } from '@fluentui/react';
 import React from 'react';
-import { Auth, Dashboard } from './Pages';
+import { Auth, Dashboard, VirtualClassroom } from './Pages';
 import {
   BrowserRouter as Router,
   Switch,
@@ -27,6 +27,9 @@ function App() {
           </Route>
           <Route path="/dashboard">
             <Dashboard />
+          </Route>
+          <Route path="/virtual-classroom/lodge*">
+            <VirtualClassroom />
           </Route>
         </Switch>
       </Stack>
