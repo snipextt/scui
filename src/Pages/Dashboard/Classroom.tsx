@@ -20,6 +20,7 @@ import {
 import React from 'react';
 import { SectionHeading } from '../../Components/Typography';
 import SimpleBar from 'simplebar-react';
+import { useHistory } from 'react-router';
 
 const rootStyles: Partial<IStackStyles> = {
   root: {
@@ -111,6 +112,7 @@ const scrollSectionStyles = mergeStyles({
 
 const Classroom: React.FC = () => {
   const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
+  const history = useHistory();
   return (
     <Stack styles={rootStyles} tokens={{ childrenGap: 40 }}>
       <Stack styles={SectionStyles} tokens={SectionTokens}>
@@ -124,6 +126,9 @@ const Classroom: React.FC = () => {
           }}
         >
           <DocumentCard
+            onClick={() => {
+              history.push('/virtual-classroom/lodge');
+            }}
             className={classroomPreviewStyles}
             type={DocumentCardType.compact}
             aria-label="Upcomimng classes"
