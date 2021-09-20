@@ -54,11 +54,6 @@ const Navbar: React.FC = () => {
             key="teachers"
           ></PivotItem>
           <PivotItem headerText="Labs" itemKey="labs" key="labs"></PivotItem>
-          <PivotItem
-            headerText="Recordings"
-            itemKey="recordings"
-            key="recordings"
-          ></PivotItem>
         </Pivot>
       </Stack>
       <Stack horizontal>
