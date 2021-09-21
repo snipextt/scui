@@ -11,7 +11,7 @@ mergeStyles({
   ':global(body,html,#root)': {
     margin: 0,
     padding: 0,
-    height: '100vh',
+    height: 'auto',
     fontFamily:
       'Segoe UI, "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif',
   },

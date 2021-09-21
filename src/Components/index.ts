@@ -1,3 +1,3 @@
 import Login from './Login';
-import Navbar from './Navbar';
+import Navbar from './Navigation';
 export { Login, Navbar };
