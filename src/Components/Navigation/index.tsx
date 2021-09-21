@@ -17,7 +17,7 @@ import {
   NotificationStyles,
   iconClass,
   hidenOnSmallViewport,
-  BottomNavigation,
+  // BottomNavigation,
 } from './styles';
 import { createPersona, handleNavbarLinkClick, useMenuProps } from './utils';
 
