@@ -8,6 +8,7 @@ const rootStyles: Partial<IStackStyles> = {
   root: {
     background: '#F8F8F8 linear-gradient(to right, #F8F8F8, #F8F8F9);',
     height: '100%',
+    minHeight: '100vh',
   },
 };
 

@@ -14,8 +14,11 @@ import {
   mergeStyles,
   Calendar,
   defaultCalendarStrings,
+  DayOfWeek,
   IStackTokens,
   Separator,
+  DatePicker,
+  defaultDatePickerStrings,
 } from '@fluentui/react';
 import React from 'react';
 import { SectionHeading } from '../../Components/Typography';
@@ -29,12 +32,30 @@ const rootStyles: Partial<IStackStyles> = {
   },
 };
 
-const SectionStyles: Partial<IStackStyles> = {
+const _SectionStyles: Partial<IStackStyles> = {
   root: {
     width: '75%',
     justifyContent: 'flex-start',
   },
 };
+
+const SectionStyles = mergeStyles(_SectionStyles.root, {
+  '@media(max-width: 900px)': {
+    width: '88%',
+  },
+});
+
+const hidenOnSmallViewport = mergeStyles({
+  '@media(max-width: 800px)': {
+    display: 'none',
+  },
+});
+
+const hidenOnlargeViewport = mergeStyles({
+  '@media(min-width: 800px)': {
+    display: 'none',
+  },
+});
 
 const onActionClick = (
   action: string,
@@ -80,7 +101,7 @@ const previewPropsUsingIcon: IDocumentCardPreviewProps = {
 
 const timeTableCardStyle: Partial<IStackStyles> = {
   root: {
-    width: 360,
+    width: 400,
     minWidth: 360,
     cursor: 'pointer',
     height: 120,
@@ -89,11 +110,9 @@ const timeTableCardStyle: Partial<IStackStyles> = {
 };
 
 const classroomPreviewStyles = mergeStyles(timeTableCardStyle.root, {
+  marginBottom: 15,
   '.ms-DocumentCardPreview': {
     maxHeight: 'auto',
-  },
-  ':last-child': {
-    marginRIght: 0,
   },
 });
 
@@ -109,13 +128,26 @@ const scrollSectionStyles = mergeStyles({
     paddingLeft: '20px',
   },
 });
+const verticalScrollSectionStyles = mergeStyles({
+  '.simplebar-scrollbar:before': {
+    // backgroundColor: palette.themePrimary,
+  },
+  '.simplebar-content': {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    // height: '100%',
+    marginTop: '20px',
+  },
+});
 
 const Classroom: React.FC = () => {
+  const [firstDayOfWeek, setFirstDayOfWeek] = React.useState(DayOfWeek.Sunday);
   const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
   const history = useHistory();
   return (
     <Stack styles={rootStyles} tokens={{ childrenGap: 40 }}>
-      <Stack styles={SectionStyles} tokens={SectionTokens}>
+      <Stack className={SectionStyles} tokens={SectionTokens}>
         <SectionHeading title="Upcoming Classes" align="left" />
         {/* <Stack horizontal> */}
         <SimpleBar
@@ -191,10 +223,80 @@ const Classroom: React.FC = () => {
         </SimpleBar>
         {/* </Stack> */}
       </Stack>
-      <Stack styles={SectionStyles} tokens={SectionTokens}>
+      <Stack className={SectionStyles} tokens={SectionTokens}>
         <SectionHeading title="Time Table" align="left" />
         <Stack horizontal>
+          <Stack style={{ width: '100%' }} className={hidenOnlargeViewport}>
+            <DatePicker
+              firstDayOfWeek={firstDayOfWeek}
+              placeholder="Select date"
+              ariaLabel="Select a date"
+              style={{ width: '100%' }}
+              // DatePicker uses English strings by default. For localized apps, you must override this prop.
+              strings={defaultDatePickerStrings}
+            />
+            <SimpleBar
+              className={verticalScrollSectionStyles}
+              style={{ maxHeight: 300, width: '100%' }}
+            >
+              <DocumentCard
+                className={classroomPreviewStyles}
+                type={DocumentCardType.compact}
+                aria-label="Upcomimng classes"
+              >
+                <DocumentCardPreview {...previewPropsUsingIcon} />
+                <DocumentCardDetails>
+                  <DocumentCardTitle title="Maths Class" />
+                  <DocumentCardActivity
+                    activity="Class at 11:30 AM"
+                    people={[{ name: 'Teacher name', profileImageSrc: '' }]}
+                  />
+                  <DocumentCardActions
+                    actions={documentCardActions}
+                    views={1}
+                  />
+                </DocumentCardDetails>
+              </DocumentCard>
+              <DocumentCard
+                className={classroomPreviewStyles}
+                type={DocumentCardType.compact}
+                aria-label="Upcomimng classes"
+              >
+                <DocumentCardPreview {...previewPropsUsingIcon} />
+                <DocumentCardDetails>
+                  <DocumentCardTitle title="Maths Class" />
+                  <DocumentCardActivity
+                    activity="Class at 11:30 AM"
+                    people={[{ name: 'Teacher name', profileImageSrc: '' }]}
+                  />
+                  <DocumentCardActions
+                    actions={documentCardActions}
+                    views={1}
+                  />
+                </DocumentCardDetails>
+              </DocumentCard>
+              <DocumentCard
+                className={classroomPreviewStyles}
+                type={DocumentCardType.compact}
+                aria-label="Upcomimng classes"
+              >
+                <DocumentCardPreview {...previewPropsUsingIcon} />
+                <DocumentCardDetails>
+                  <DocumentCardTitle title="Maths Class" />
+                  <DocumentCardActivity
+                    activity="Class at 11:30 AM"
+                    people={[{ name: 'Teacher name', profileImageSrc: '' }]}
+                  />
+                  <DocumentCardActions
+                    actions={documentCardActions}
+                    views={1}
+                  />
+                </DocumentCardDetails>
+              </DocumentCard>
+            </SimpleBar>
+          </Stack>
           <Calendar
+            className={hidenOnSmallViewport}
             showGoToToday
             showMonthPickerAsOverlay
             onSelectDate={setSelectedDate}
@@ -202,15 +304,15 @@ const Classroom: React.FC = () => {
             // Calendar uses English strings by default. For localized apps, you must override this prop.
             strings={defaultCalendarStrings}
           />
-          <Separator vertical />
-          <Separator vertical />
-          <Separator vertical />
+          <Separator className={hidenOnSmallViewport} vertical />
+          <Separator className={hidenOnSmallViewport} vertical />
+          <Separator className={hidenOnSmallViewport} vertical />
 
           <SimpleBar
-            className={scrollSectionStyles}
+            className={scrollSectionStyles + ' ' + hidenOnSmallViewport}
             style={{
               width: '100%',
-              height: '100%',
+              height: '230px',
             }}
           >
             <DocumentCard
@@ -246,7 +348,7 @@ const Classroom: React.FC = () => {
           </SimpleBar>
         </Stack>
       </Stack>
-      <Stack styles={SectionStyles} tokens={SectionTokens}>
+      <Stack className={SectionStyles} tokens={SectionTokens}>
         <SectionHeading title="Pending Assignments" align="left" />
         <Stack
           horizontal

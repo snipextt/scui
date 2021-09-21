@@ -11,6 +11,7 @@ import {
 const rootStyles: Partial<IStackStyles> = {
   root: {
     height: '100%',
+    minHeight: '100vh',
   },
 };
 
