@@ -148,7 +148,7 @@ const Classroom: React.FC = () => {
   return (
     <Stack styles={rootStyles} tokens={{ childrenGap: 40 }}>
       <Stack className={SectionStyles} tokens={SectionTokens}>
-        <SectionHeading title="Upcoming Classes" align="left" />
+        <SectionHeading padTop title="Upcoming Classes" align="left" />
         {/* <Stack horizontal> */}
         <SimpleBar
           className={scrollSectionStyles}
