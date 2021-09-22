@@ -31,7 +31,6 @@ const rootStyles: Partial<IStackStyles> = {
     paddingBottom: '1.5rem',
   },
 };
-
 const _SectionStyles: Partial<IStackStyles> = {
   root: {
     width: '75%',
