@@ -19,6 +19,7 @@ const rootStyles: Partial<IStackItemStyles> = {
     width: '100%',
     height: '100%',
     position: 'relative',
+    minHeight: '100vh',
   },
 };
 
@@ -32,7 +33,7 @@ const meetingControlsContainerStyles: Partial<IStackItemStyles> = {
   },
 };
 
-const meetingControlsStyles: Partial<IStackItemStyles> = {
+const _meetingControlsStyles: Partial<IStackItemStyles> = {
   root: {
     width: '25%',
     background: '#fff',
@@ -43,6 +44,18 @@ const meetingControlsStyles: Partial<IStackItemStyles> = {
       'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px',
   },
 };
+
+const meetingControlsStyles = mergeStyles(_meetingControlsStyles.root, {
+  '@media(max-width: 1200px)': {
+    width: '40%',
+  },
+  '@media(max-width: 830px)': {
+    width: '50%',
+  },
+  '@media(max-width: 650px)': {
+    width: '70%',
+  },
+});
 
 const iconClass = mergeStyles({
   fontSize: 20,
@@ -112,7 +125,7 @@ const VirtualClassroom: React.FC = () => {
     <>
       <Stack styles={rootStyles}>
         <Stack styles={meetingControlsContainerStyles} horizontal>
-          <Stack styles={meetingControlsStyles} horizontal>
+          <Stack className={meetingControlsStyles} horizontal>
             <TooltipHost
               content="Leave Classroom"
               id={leaveClassTTID}
