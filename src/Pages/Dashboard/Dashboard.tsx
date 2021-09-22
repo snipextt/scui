@@ -1,6 +1,7 @@
 import { IStackStyles, Stack } from '@fluentui/react';
 import React from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
+import SimpleBar from 'simplebar-react';
 import { Classroom, Labs, Recordings, Assignments, Teachers } from '..';
 import { Navbar } from '../../Components';
 
@@ -16,10 +17,10 @@ const Dashboard: React.FC = () => {
   const { path, url } = useRouteMatch();
   return (
     <>
-      <Stack
-        styles={rootStyles}
-        tokens={{
-          childrenGap: 20,
+      <SimpleBar
+        style={{
+          maxWidth: '100%',
+          height: '100vh',
         }}
       >
         <Navbar />
@@ -45,7 +46,7 @@ const Dashboard: React.FC = () => {
             <Recordings />
           </Route>
         </Switch>
-      </Stack>
+      </SimpleBar>
     </>
   );
 };
