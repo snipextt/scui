@@ -8,6 +8,7 @@ import {
   Text,
   Pivot,
   PivotItem,
+  Panel,
 } from '@fluentui/react';
 import React, { useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
@@ -17,9 +18,11 @@ import {
   NotificationStyles,
   iconClass,
   hidenOnSmallViewport,
+  hidenOnLargeViewport,
   // BottomNavigation,
 } from './styles';
 import { createPersona, handleNavbarLinkClick, useMenuProps } from './utils';
+import { useBoolean } from '@fluentui/react-hooks';
 
 const Navbar: React.FC = () => {
   const personaRef = useRef<any>(null);
@@ -29,6 +32,9 @@ const Navbar: React.FC = () => {
   const menuProps = useMenuProps(personaRef);
   const location = useLocation();
   const history = useHistory();
+  const [isOpen, { setTrue: openPanel, setFalse: dismissPanel }] =
+    useBoolean(false);
+
   return (
     <>
       <Stack className={NavbarStyles} horizontal>
@@ -69,6 +75,7 @@ const Navbar: React.FC = () => {
             onDismiss={() => setProfileContextMenuVisible(false)}
           />
           <Stack
+            className={hidenOnSmallViewport}
             onClick={() =>
               setProfileContextMenuVisible(!profileContextMenuVisible)
             }
@@ -76,14 +83,39 @@ const Navbar: React.FC = () => {
           >
             <Persona
               {...profilePersona}
-              hidePersonaDetails={window.innerWidth < 900}
               initialsColor={PersonaInitialsColor.blue}
               size={PersonaSize.size40}
               imageAlt="Saurav"
             />
           </Stack>
+          <Stack
+            className={hidenOnLargeViewport}
+            onClick={openPanel}
+            style={{ cursor: 'pointer' }}
+          >
+            <Persona
+              hidePersonaDetails
+              initialsColor={PersonaInitialsColor.blue}
+              size={PersonaSize.size40}
+            />
+          </Stack>
         </Stack>
       </Stack>
+      <Panel
+        isLightDismiss
+        isOpen={isOpen}
+        onDismiss={dismissPanel}
+        closeButtonAriaLabel="Close"
+      >
+        <Stack>
+          <Persona
+            {...profilePersona}
+            initialsColor={PersonaInitialsColor.blue}
+            size={PersonaSize.size40}
+            imageAlt="Saurav"
+          />
+        </Stack>
+      </Panel>
     </>
   );
 };

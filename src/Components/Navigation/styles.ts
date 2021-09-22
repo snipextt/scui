@@ -69,6 +69,12 @@ const hidenOnSmallViewport = mergeStyles({
   },
 });
 
+const hidenOnLargeViewport = mergeStyles({
+  '@media(min-width: 900px)': {
+    display: 'none',
+  },
+});
+
 export {
   NavbarStyles,
   logoStyles,
@@ -76,4 +82,5 @@ export {
   iconClass,
   hidenOnSmallViewport,
   BottomNavigation,
+  hidenOnLargeViewport,
 };
