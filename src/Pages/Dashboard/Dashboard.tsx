@@ -1,4 +1,4 @@
-import { IStackStyles, mergeStyles } from '@fluentui/react';
+import { mergeStyles } from '@fluentui/react';
 import React from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 import SimpleBar from 'simplebar-react';
