@@ -142,7 +142,7 @@ const verticalScrollSectionStyles = mergeStyles({
 });
 
 const Classroom: React.FC = () => {
-  const [firstDayOfWeek, setFirstDayOfWeek] = React.useState(DayOfWeek.Sunday);
+  const [firstDayOfWeek] = React.useState(DayOfWeek.Sunday);
   const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
   const history = useHistory();
   return (
