@@ -78,6 +78,11 @@ const hidenOnSmallViewport = mergeStyles({
 const imageProps: Partial<IImageProps> = {
   src: enlightLogo,
 };
+const hidenOnLargeViewport = mergeStyles({
+  '@media(min-width: 900px)': {
+    display: 'none',
+  },
+});
 
 export {
   NavbarStyles,
@@ -87,4 +92,5 @@ export {
   hidenOnSmallViewport,
   BottomNavigation,
   imageProps,
+  hidenOnLargeViewport,
 };
