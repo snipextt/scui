@@ -5,7 +5,7 @@ import {
   PersonaInitialsColor,
   PersonaSize,
   Stack,
-  Text,
+  Image,
   Pivot,
   PivotItem,
 } from '@fluentui/react';
@@ -13,10 +13,10 @@ import React, { useRef, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import {
   NavbarStyles,
-  logoStyles,
   NotificationStyles,
   iconClass,
   hidenOnSmallViewport,
+  imageProps,
   // BottomNavigation,
 } from './styles';
 import { createPersona, handleNavbarLinkClick, useMenuProps } from './utils';
@@ -33,7 +33,11 @@ const Navbar: React.FC = () => {
     <>
       <Stack className={NavbarStyles} horizontal>
         <Stack horizontal>
-          <Text styles={logoStyles}>Startup Hai</Text>
+          <Image
+            height={45}
+            {...imageProps}
+            alt="Example with no image fit value and height or width is specified."
+          />
         </Stack>
         <Stack horizontal className={hidenOnSmallViewport}>
           <Pivot

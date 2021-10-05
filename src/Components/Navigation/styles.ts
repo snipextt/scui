@@ -1,4 +1,10 @@
-import { IStackStyles, ITextStyles, mergeStyles } from '@fluentui/react';
+import {
+  IImageProps,
+  IStackStyles,
+  ITextStyles,
+  mergeStyles,
+} from '@fluentui/react';
+import enlightLogo from './enlight.png';
 
 const _NavbarStyles: Partial<IStackStyles> = {
   root: {
@@ -69,6 +75,10 @@ const hidenOnSmallViewport = mergeStyles({
   },
 });
 
+const imageProps: Partial<IImageProps> = {
+  src: enlightLogo,
+};
+
 export {
   NavbarStyles,
   logoStyles,
@@ -76,4 +86,5 @@ export {
   iconClass,
   hidenOnSmallViewport,
   BottomNavigation,
+  imageProps,
 };

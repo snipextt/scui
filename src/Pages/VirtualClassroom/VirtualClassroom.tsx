@@ -10,8 +10,10 @@ import {
 } from '@fluentui/react';
 import { useId } from '@fluentui/react-hooks';
 import React, { useEffect, useRef, useState } from 'react';
-import { useToggleAudio, useToggleCamera, useToggleScreenshare } from './hooks';
-// import { useLocation } from 'react-router';
+import { useToggleCamera } from './hooks';
+import { Client, LocalStream, RemoteStream } from 'ion-sdk-js';
+import { IonSFUJSONRPCSignal } from 'ion-sdk-js/lib/signal/json-rpc-impl';
+import ParticipantAudio from './ParticipantAudio';
 
 const rootStyles: Partial<IStackItemStyles> = {
   root: {
@@ -25,7 +27,7 @@ const rootStyles: Partial<IStackItemStyles> = {
 const meetingControlsContainerStyles: Partial<IStackItemStyles> = {
   root: {
     position: 'absolute',
-    bottom: '8%',
+    bottom: '6%',
     justifyContent: 'center',
     width: '100%',
     zIndex: 10,
@@ -37,7 +39,7 @@ const meetingControlsStyles: Partial<IStackItemStyles> = {
     width: '25%',
     background: '#fff',
     borderRadius: 20,
-    padding: 10,
+    padding: 8,
     justifyContent: 'space-around',
     boxShadow:
       'rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px',
@@ -45,9 +47,9 @@ const meetingControlsStyles: Partial<IStackItemStyles> = {
 };
 
 const iconClass = mergeStyles({
-  fontSize: 20,
-  height: 20,
-  width: 20,
+  fontSize: 15,
+  height: 15,
+  width: 15,
   color: 'white',
 });
 
@@ -68,6 +70,8 @@ const hostStyles: Partial<ITooltipHostStyles> = {
   root: { display: 'inline-block' },
 };
 
+let remoteStreams: any = {};
+
 const VirtualClassroom: React.FC = () => {
   // const classId = new URLSearchParams(useLocation().search).get('id');
   const leaveClassTTID = useId('tt');
@@ -77,22 +81,28 @@ const VirtualClassroom: React.FC = () => {
   const CameraShareTTID = useId('tt');
 
   const videoRef = useRef<HTMLVideoElement>();
-  const [screenShareStreamId, setScreenShareStreamId] = useState('');
-  const [audioShareStreamId, setAudioShareStreamId] = useState('');
+  const [screenStream, setScreenStream] = useState<null | LocalStream>(null);
+  const [screenAudio, setAudioStream] = useState<null | LocalStream>(null);
   const [cameraShareStreamId, setCameraShareStreamId] = useState('');
   const [isMuted, setIsMuted] = useState(false);
   const [userMediaStream] = useState<MediaStream>(new MediaStream());
+  const [, setSignal] = useState<IonSFUJSONRPCSignal | null>(null);
+  const [client, setClient] = useState<Client | null>(null);
+  const [remoteAudioStreams, setRemoteAudioStreams] = useState<
+    Array<RemoteStream>
+  >([]);
+  const [isVideoActive, setIsVideoActive] = useState(false);
 
-  const toggleShareScreen = useToggleScreenshare(
-    userMediaStream,
-    screenShareStreamId,
-    setScreenShareStreamId
-  );
-  const toggleAudio = useToggleAudio(
-    userMediaStream,
-    audioShareStreamId,
-    setAudioShareStreamId
-  );
+  // const toggleShareScreen = useToggleScreenshare(
+  //   userMediaStream,
+  //   screenShareStreamId,
+  //   setScreenShareStreamId
+  // );
+  // const toggleAudio = useToggleAudio(
+  //   userMediaStream,
+  //   audioShareStreamId,
+  //   setAudioShareStreamId
+  // );
   const ToggleCamera = useToggleCamera(
     userMediaStream,
     cameraShareStreamId,
@@ -105,7 +115,36 @@ const VirtualClassroom: React.FC = () => {
   };
 
   useEffect(() => {
-    videoRef.current!.srcObject = userMediaStream;
+    let signal = new IonSFUJSONRPCSignal('wss://treaclecake.ninja/ws');
+    signal.onerror = console.error;
+    let client = new Client(signal);
+    setSignal(signal);
+    setClient(client);
+    signal.onopen = () => {
+      client.join('classroom', `${Math.random()}`).then(() => {
+        console.log('Joined room');
+      });
+    };
+    client.ontrack = (track: MediaStreamTrack, stream: RemoteStream) => {
+      remoteStreams[stream.id] = stream;
+      if (track.kind === 'video') {
+        stream.preferLayer('high');
+        setIsVideoActive(true);
+        videoRef.current!.srcObject = stream;
+        videoRef.current!.play();
+        (stream as any).oninactive = () => {
+          videoRef.current!.srcObject = null;
+          setIsVideoActive(false);
+        };
+      } else {
+        console.log('here');
+        (stream as any).oninactive = () => {
+          // to implment
+        };
+        setRemoteAudioStreams((r) => [...r, stream]);
+      }
+    };
+    signal.onerror = alert;
   }, [userMediaStream]);
 
   return (
@@ -159,10 +198,31 @@ const VirtualClassroom: React.FC = () => {
               <Stack
                 horizontal
                 style={{
-                  backgroundColor: audioShareStreamId ? 'red' : '',
+                  backgroundColor: screenAudio ? 'red' : '',
                 }}
                 styles={controlButtonStyles}
-                onClick={() => toggleAudio()}
+                onClick={() => {
+                  if (!screenAudio)
+                    LocalStream.getUserMedia({
+                      video: false,
+                      audio: true,
+                      codec: 'vp8',
+                      resolution: 'hd',
+                    }).then((local) => {
+                      client!.publish(local);
+                      (local as any).oninactive = () => {
+                        local.getTracks().forEach((track) => track.stop());
+                        local.unpublish();
+                        setAudioStream(null);
+                      };
+                      setAudioStream(local);
+                    });
+                  else {
+                    screenAudio!.getTracks().forEach((t) => t.stop());
+                    screenAudio!.unpublish();
+                    setAudioStream(null);
+                  }
+                }}
               >
                 <FontIcon
                   aria-label="Microphone"
@@ -182,9 +242,31 @@ const VirtualClassroom: React.FC = () => {
                 horizontal
                 styles={controlButtonStyles}
                 style={{
-                  backgroundColor: screenShareStreamId ? 'red' : '',
+                  backgroundColor: screenStream ? 'red' : '',
                 }}
-                onClick={() => toggleShareScreen()}
+                onClick={() => {
+                  if (isVideoActive) return;
+                  if (!screenStream)
+                    LocalStream.getDisplayMedia({
+                      audio: true,
+                      video: true,
+                      codec: 'vp8',
+                      resolution: 'fhd',
+                    }).then((local) => {
+                      client!.publish(local);
+                      (local as any).oninactive = () => {
+                        local.getTracks().forEach((track) => track.stop());
+                        local.unpublish();
+                        setIsVideoActive(false);
+                      };
+                      setScreenStream(local);
+                    });
+                  else {
+                    screenStream.getTracks().forEach((track) => track.stop());
+                    screenStream.unpublish();
+                    setScreenStream(null);
+                  }
+                }}
               >
                 <FontIcon
                   aria-label="Screen Share"
@@ -232,6 +314,9 @@ const VirtualClassroom: React.FC = () => {
             autoPlay
             ref={videoRef as any}
           ></video>
+          {remoteAudioStreams?.map((stream) => (
+            <ParticipantAudio stream={stream} key={stream.id} />
+          ))}
         </Stack>
       </Stack>
     </>

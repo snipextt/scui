@@ -1,7 +1,10 @@
+import { Client } from 'ion-sdk-js';
+
 const useToggleScreenshare = (
   userMedia: MediaStream,
   screenShareStreamId: string,
-  setScreenShareStreamId: React.Dispatch<React.SetStateAction<string>>
+  setScreenShareStreamId: React.Dispatch<React.SetStateAction<string>>,
+  client: Client
 ) => {
   return async () => {
     if (!screenShareStreamId) {
