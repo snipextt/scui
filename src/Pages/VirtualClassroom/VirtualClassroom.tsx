@@ -105,6 +105,7 @@ const VirtualClassroom: React.FC = () => {
     Array<RemoteStream>
   >([]);
   const [isVideoActive, setIsVideoActive] = useState(false);
+  // const screenRef = useRef<any>();
 
   // const toggleShareScreen = useToggleScreenshare(
   //   userMediaStream,
@@ -128,6 +129,10 @@ const VirtualClassroom: React.FC = () => {
   };
 
   useEffect(() => {
+    document
+      .querySelector('#root > div')!
+      .requestFullscreen()
+      .catch(console.error);
     let signal = new IonSFUJSONRPCSignal('wss://treaclecake.ninja/ws');
     signal.onerror = console.error;
     let client = new Client(signal);
