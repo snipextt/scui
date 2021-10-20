@@ -1,5 +1,7 @@
 import { Stack, TextField, Link, PrimaryButton, Text } from '@fluentui/react';
+import axios from 'axios';
 import React, { useState } from 'react';
+import { useHistory } from 'react-router';
 import {
   rootStyles,
   loginStylesClassname,
@@ -11,8 +13,11 @@ import {
 } from './styles';
 
 const Login: React.FC = () => {
+  const history = useHistory();
   const [showEmailDescription, setShowEmailDescription] = useState(true);
   const [isInvalidEmail, setIsInvalidEmail] = useState(false);
+  const [email,setEmail] = useState('');
+  const [password,setPassword] = useState('');
   const [showPasswordDescription, setShowPasswordDescription] = useState(true);
   const validateEmail = (email: string) => {
     if (email === '') {
@@ -44,6 +49,7 @@ const Login: React.FC = () => {
           onBlur={(e) => validateEmail((e.target as HTMLInputElement).value)}
           errorMessage={isInvalidEmail ? 'Invalid email' : undefined}
           placeholder={'Email'}
+          onChange={e=> setEmail((e.target as HTMLInputElement).value)}
           description={showEmailDescription ? 'Enter your email' : ''}
           underlined
           iconProps={{
@@ -56,6 +62,7 @@ const Login: React.FC = () => {
           onBlur={(e) => setShowPasswordDescription(e.target.value === '')}
           placeholder={'**********'}
           type="password"
+          onChange={e=> setPassword((e.target as HTMLInputElement).value)}
           description={showPasswordDescription ? 'Enter your password' : ''}
           canRevealPassword
           revealPasswordAriaLabel="Show password"
@@ -64,7 +71,14 @@ const Login: React.FC = () => {
           <Link>Forgot Password?</Link>
         </Text>
         <Stack.Item align="end">
-          <PrimaryButton text="Login" />
+          <PrimaryButton onClick={()=> {
+            axios.post("http://localhost:3000/auth/login",{
+              email,password
+            }).then(res => {
+              sessionStorage.setItem("authToken", (res.data as any).token);
+                history.push('/dashboard');
+          })
+          }} text="Login" />
         </Stack.Item>
       </Stack>
     </Stack>

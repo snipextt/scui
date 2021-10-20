@@ -1,6 +1,7 @@
-import { mergeStyles } from '@fluentui/react';
-import React from 'react';
-import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
+import { IStackProps, Label, mergeStyles, Spinner, SpinnerSize, Stack } from '@fluentui/react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useRouteMatch, Switch, Route, Redirect, useHistory } from 'react-router-dom';
 import SimpleBar from 'simplebar-react';
 import { Classroom, Labs, Recordings, Assignments, Teachers } from '..';
 import { Navbar } from '../../Components';
@@ -14,8 +15,42 @@ const scrollSectionStyles = mergeStyles({
 
 const Dashboard: React.FC = () => {
   const { path, url } = useRouteMatch();
+  const history = useHistory();
+  const [userDetails,setUserDetails] = useState<any>(null)
+  const [isLoading,setIsLoading] = useState(true);
+  const rowProps: IStackProps = { horizontal: true, verticalAlign: 'center', horizontalAlign: 'center' };
+
+  const tokens = {
+    sectionStack: {
+      childrenGap: 10,
+    },
+    spinnerStack: {
+      childrenGap: 20,
+    },
+  };
+  useEffect(()=>{
+    if(!sessionStorage.getItem("authToken")){
+      history.replace('/auth');
+    }
+    axios.defaults.headers.common['Authorization'] = sessionStorage.getItem("authToken")!;
+    axios.get("http://localhost:3000/user/profile").then(res=>{
+      setUserDetails(res.data);
+      setIsLoading(false)
+    })
+  },[history])
   return (
     <>
+              {isLoading && <Stack style={
+            {
+              height: "100%",
+              zIndex: 1,
+              background: 'rgba(255,255,255,0.9)',
+              position: "absolute",
+              width: "100%"
+            }
+          } {...rowProps} tokens={tokens.spinnerStack}>
+        <Spinner size={SpinnerSize.large} />
+      </Stack>}
       <SimpleBar
         className={scrollSectionStyles}
         style={{
@@ -23,7 +58,7 @@ const Dashboard: React.FC = () => {
           height: '100vh',
         }}
       >
-        <Navbar />
+        <Navbar userDetails={userDetails} />
         <Switch>
           <Route exact path={path}>
             <Redirect
@@ -31,7 +66,7 @@ const Dashboard: React.FC = () => {
             />
           </Route>
           <Route path={`${path}/classroom`}>
-            <Classroom />
+            <Classroom userDetails={userDetails} />
           </Route>
           <Route exact path={`${path}/assignments`}>
             <Assignments />

@@ -1,16 +1,6 @@
 import {
-  DocumentCard,
-  DocumentCardActions,
-  DocumentCardActivity,
-  DocumentCardDetails,
-  getTheme,
-  DocumentCardPreview,
-  DocumentCardTitle,
-  DocumentCardType,
-  IButtonProps,
   IStackStyles,
   Stack,
-  IDocumentCardPreviewProps,
   mergeStyles,
   Calendar,
   defaultCalendarStrings,
@@ -24,6 +14,7 @@ import React from 'react';
 import { SectionHeading } from '../../Components/Typography';
 import SimpleBar from 'simplebar-react';
 import { useHistory } from 'react-router';
+import ClassroomCard from '../../Components/ClassroomCard';
 
 const rootStyles: Partial<IStackStyles> = {
   root: {
@@ -55,48 +46,6 @@ const hidenOnlargeViewport = mergeStyles({
     display: 'none',
   },
 });
-
-const onActionClick = (
-  action: string,
-  ev: React.SyntheticEvent<HTMLElement>
-): void => {
-  console.log(`You clicked the ${action} action`);
-  ev.stopPropagation();
-  ev.preventDefault();
-};
-
-const documentCardActions: IButtonProps[] = [
-  {
-    iconProps: { iconName: 'Pin' },
-    onClick: () => onActionClick.bind(this, 'pin'),
-    ariaLabel: 'pin action',
-  },
-  {
-    iconProps: { iconName: 'Ringer' },
-    onClick: () => onActionClick.bind(this, 'notifications'),
-    ariaLabel: 'notifications action',
-  },
-];
-
-const theme = getTheme();
-const { palette, fonts } = theme;
-
-const previewPropsUsingIcon: IDocumentCardPreviewProps = {
-  previewImages: [
-    {
-      previewIconProps: {
-        iconName: 'OpenFile',
-        styles: {
-          root: { fontSize: fonts.xxLarge.fontSize, color: palette.white },
-        },
-      },
-      width: 144,
-    },
-  ],
-  styles: {
-    previewIcon: { backgroundColor: palette.themePrimary, maxHeight: '200px' },
-  },
-};
 
 const timeTableCardStyle: Partial<IStackStyles> = {
   root: {
@@ -140,7 +89,7 @@ const verticalScrollSectionStyles = mergeStyles({
   },
 });
 
-const Classroom: React.FC = () => {
+const Classroom: React.FC<{userDetails: any}> = ({userDetails}) => {
   const [firstDayOfWeek] = React.useState(DayOfWeek.Sunday);
   const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
   const history = useHistory();
@@ -156,69 +105,10 @@ const Classroom: React.FC = () => {
             height: 180,
           }}
         >
-          <DocumentCard
-            onClick={() => {
-              history.push('/virtual-classroom/lodge');
-            }}
-            className={classroomPreviewStyles}
-            type={DocumentCardType.compact}
-            aria-label="Upcomimng classes"
-          >
-            <DocumentCardPreview {...previewPropsUsingIcon} />
-            <DocumentCardDetails>
-              <DocumentCardTitle title="Maths Class" />
-              <DocumentCardActivity
-                activity="Class at 11:30 AM"
-                people={[{ name: 'Teacher name', profileImageSrc: '' }]}
-              />
-              <DocumentCardActions actions={documentCardActions} views={1} />
-            </DocumentCardDetails>
-          </DocumentCard>
-          <DocumentCard
-            className={classroomPreviewStyles}
-            type={DocumentCardType.compact}
-            aria-label="Upcomimng classes"
-          >
-            <DocumentCardPreview {...previewPropsUsingIcon} />
-            <DocumentCardDetails>
-              <DocumentCardTitle title="Maths Class" />
-              <DocumentCardActivity
-                activity="Class at 11:30 AM"
-                people={[{ name: 'Teacher name', profileImageSrc: '' }]}
-              />
-              <DocumentCardActions actions={documentCardActions} views={1} />
-            </DocumentCardDetails>
-          </DocumentCard>
-          <DocumentCard
-            className={classroomPreviewStyles}
-            type={DocumentCardType.compact}
-            aria-label="Upcomimng classes"
-          >
-            <DocumentCardPreview {...previewPropsUsingIcon} />
-            <DocumentCardDetails>
-              <DocumentCardTitle title="Maths Class" />
-              <DocumentCardActivity
-                activity="Class at 11:30 AM"
-                people={[{ name: 'Teacher name', profileImageSrc: '' }]}
-              />
-              <DocumentCardActions actions={documentCardActions} views={1} />
-            </DocumentCardDetails>
-          </DocumentCard>
-          <DocumentCard
-            className={classroomPreviewStyles}
-            type={DocumentCardType.compact}
-            aria-label="Upcomimng classes"
-          >
-            <DocumentCardPreview {...previewPropsUsingIcon} />
-            <DocumentCardDetails>
-              <DocumentCardTitle title="Maths Class" />
-              <DocumentCardActivity
-                activity="Class at 11:30 AM"
-                people={[{ name: 'Teacher name', profileImageSrc: '' }]}
-              />
-              <DocumentCardActions actions={documentCardActions} views={1} />
-            </DocumentCardDetails>
-          </DocumentCard>
+         <ClassroomCard /> 
+         <ClassroomCard /> 
+         <ClassroomCard /> 
+         <ClassroomCard /> 
         </SimpleBar>
         {/* </Stack> */}
       </Stack>
@@ -238,60 +128,9 @@ const Classroom: React.FC = () => {
               className={verticalScrollSectionStyles}
               style={{ maxHeight: 300, width: '100%' }}
             >
-              <DocumentCard
-                className={classroomPreviewStyles}
-                type={DocumentCardType.compact}
-                aria-label="Upcomimng classes"
-              >
-                <DocumentCardPreview {...previewPropsUsingIcon} />
-                <DocumentCardDetails>
-                  <DocumentCardTitle title="Maths Class" />
-                  <DocumentCardActivity
-                    activity="Class at 11:30 AM"
-                    people={[{ name: 'Teacher name', profileImageSrc: '' }]}
-                  />
-                  <DocumentCardActions
-                    actions={documentCardActions}
-                    views={1}
-                  />
-                </DocumentCardDetails>
-              </DocumentCard>
-              <DocumentCard
-                className={classroomPreviewStyles}
-                type={DocumentCardType.compact}
-                aria-label="Upcomimng classes"
-              >
-                <DocumentCardPreview {...previewPropsUsingIcon} />
-                <DocumentCardDetails>
-                  <DocumentCardTitle title="Maths Class" />
-                  <DocumentCardActivity
-                    activity="Class at 11:30 AM"
-                    people={[{ name: 'Teacher name', profileImageSrc: '' }]}
-                  />
-                  <DocumentCardActions
-                    actions={documentCardActions}
-                    views={1}
-                  />
-                </DocumentCardDetails>
-              </DocumentCard>
-              <DocumentCard
-                className={classroomPreviewStyles}
-                type={DocumentCardType.compact}
-                aria-label="Upcomimng classes"
-              >
-                <DocumentCardPreview {...previewPropsUsingIcon} />
-                <DocumentCardDetails>
-                  <DocumentCardTitle title="Maths Class" />
-                  <DocumentCardActivity
-                    activity="Class at 11:30 AM"
-                    people={[{ name: 'Teacher name', profileImageSrc: '' }]}
-                  />
-                  <DocumentCardActions
-                    actions={documentCardActions}
-                    views={1}
-                  />
-                </DocumentCardDetails>
-              </DocumentCard>
+          <ClassroomCard />
+          <ClassroomCard />
+          <ClassroomCard />
             </SimpleBar>
           </Stack>
           <Calendar
@@ -314,36 +153,9 @@ const Classroom: React.FC = () => {
               height: '230px',
             }}
           >
-            <DocumentCard
-              className={classroomPreviewStyles}
-              type={DocumentCardType.compact}
-              aria-label="Upcomimng classes"
-            >
-              <DocumentCardPreview {...previewPropsUsingIcon} />
-              <DocumentCardDetails>
-                <DocumentCardTitle title="Maths Class" />
-                <DocumentCardActivity
-                  activity="Class at 11:30 AM"
-                  people={[{ name: 'Teacher name', profileImageSrc: '' }]}
-                />
-                <DocumentCardActions actions={documentCardActions} views={1} />
-              </DocumentCardDetails>
-            </DocumentCard>
-            <DocumentCard
-              className={classroomPreviewStyles}
-              type={DocumentCardType.compact}
-              aria-label="Upcomimng classes"
-            >
-              <DocumentCardPreview {...previewPropsUsingIcon} />
-              <DocumentCardDetails>
-                <DocumentCardTitle title="Maths Class" />
-                <DocumentCardActivity
-                  activity="Class at 11:30 AM"
-                  people={[{ name: 'Teacher name', profileImageSrc: '' }]}
-                />
-                <DocumentCardActions actions={documentCardActions} views={1} />
-              </DocumentCardDetails>
-            </DocumentCard>
+          <ClassroomCard />
+          <ClassroomCard />
+          <ClassroomCard />
           </SimpleBar>
         </Stack>
       </Stack>

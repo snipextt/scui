@@ -70,10 +70,7 @@ const useMenuProps = (personaRef: Target | undefined) =>
 const createPersona = (
   personaRef: React.Ref<HTMLDivElement> | undefined
 ): IPersonaSharedProps => ({
-  imageInitials: 'S',
-  text: 'Saurav',
   ref: personaRef,
-  secondaryText: 'Software Engineer',
 });
 
 const handleNavbarLinkClick = (item?: any, history?: History) => {
