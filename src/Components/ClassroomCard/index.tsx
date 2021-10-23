@@ -1,18 +1,29 @@
-import { DocumentCard, DocumentCardType, DocumentCardPreview, DocumentCardDetails, DocumentCardTitle, DocumentCardActivity, DocumentCardActions, mergeStyles, IDocumentCardPreviewProps, getTheme, IStackStyles, IButtonProps } from "@fluentui/react";
-import React from "react";
-import { useHistory } from "react-router";
+import {
+  DocumentCard,
+  DocumentCardType,
+  DocumentCardPreview,
+  DocumentCardDetails,
+  DocumentCardTitle,
+  DocumentCardActivity,
+  mergeStyles,
+  IDocumentCardPreviewProps,
+  getTheme,
+  IStackStyles,
+} from '@fluentui/react';
+import React, { useEffect } from 'react';
+import { useHistory } from 'react-router';
 
 const theme = getTheme();
 const { palette, fonts } = theme;
 
-const onActionClick = (
-  action: string,
-  ev: React.SyntheticEvent<HTMLElement>
-): void => {
-  console.log(`You clicked the ${action} action`);
-  ev.stopPropagation();
-  ev.preventDefault();
-};
+// const onActionClick = (
+//   action: string,
+//   ev: React.SyntheticEvent<HTMLElement>
+// ): void => {
+//   console.log(`You clicked the ${action} action`);
+//   ev.stopPropagation();
+//   ev.preventDefault();
+// };
 
 const timeTableCardStyle: Partial<IStackStyles> = {
   root: {
@@ -48,41 +59,58 @@ const previewPropsUsingIcon: IDocumentCardPreviewProps = {
   },
 };
 
-const documentCardActions: IButtonProps[] = [
-  {
-    iconProps: { iconName: 'Pin' },
-    onClick: () => onActionClick.bind(this, 'pin'),
-    ariaLabel: 'pin action',
-  },
-  {
-    iconProps: { iconName: 'Ringer' },
-    onClick: () => onActionClick.bind(this, 'notifications'),
-    ariaLabel: 'notifications action',
-  },
-];
+// const documentCardActions: IButtonProps[] = [];
 
-const ClassroomCard: React.FC = () => {
-    const history = useHistory();
-    return (
-        <DocumentCard
-            onClick={() => {
-              history.push('/virtual-classroom/lodge');
-            }}
-            className={classroomPreviewStyles}
-            type={DocumentCardType.compact}
-            aria-label="Upcomimng classes"
-          >
-            <DocumentCardPreview {...previewPropsUsingIcon} />
-            <DocumentCardDetails>
-              <DocumentCardTitle title="Maths Class" />
-              <DocumentCardActivity
-                activity="Class at 11:30 AM"
-                people={[{ name: 'Teacher name', profileImageSrc: '' }]}
-              />
-              <DocumentCardActions actions={documentCardActions} views={1} />
-            </DocumentCardDetails>
-          </DocumentCard>
-    )
-} 
+const ClassroomCard: React.FC<{ classData?: any }> = ({ classData }) => {
+  const history = useHistory();
+  const [classTime, setClassTime] = React.useState('');
+  const [className, setClassName] = React.useState('');
+  const [teacher, setTeacher] = React.useState('');
+  // const [classCode, setClassCode] = React.useState('');
+  const [classDate, setClassDate] = React.useState('');
+  useEffect(() => {
+    setClassTime(classData?.startTime);
+    setTeacher(classData?.subjectData.teacherName);
+    setClassName(
+      classData?.subjectData.name.split('')[0].toUpperCase() +
+        classData?.subjectData.name.slice(1)
+    );
+    setClassDate(classData?.date);
+    setClassDate(classData?.date?.toLocaleDateString());
+  }, [classData]);
+  return (
+    <DocumentCard
+      onClick={() => {
+        history.push('/virtual-classroom/lodge', {
+          classData,
+        });
+      }}
+      className={classroomPreviewStyles}
+      type={DocumentCardType.compact}
+      aria-label="Upcomimng classes"
+    >
+      <DocumentCardPreview {...previewPropsUsingIcon} />
+      <DocumentCardDetails>
+        <DocumentCardTitle title={`${className}`} />
+        <DocumentCardActivity
+          activity={`Starts ${classTime || 11} ${
+            parseInt(classTime) > 11 ? 'PM' : 'AM'
+          } `}
+          people={[{ name: teacher, profileImageSrc: '' }]}
+        />
+        <p
+          style={{
+            fontSize: '0.8rem',
+            marginLeft: '1rem',
+          }}
+        >
+          Session{' '}
+          {classDate === new Date().toLocaleDateString() ? 'today' : classDate}
+        </p>
+        {/* {<DocumentCardActions actions={documentCardActions} views={1} />} */}
+      </DocumentCardDetails>
+    </DocumentCard>
+  );
+};
 
 export default ClassroomCard;

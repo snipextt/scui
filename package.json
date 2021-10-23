@@ -2,6 +2,7 @@
   "name": "ui",
   "version": "0.1.0",
   "private": true,
+  "proxy": "https://z774173c6-z606665ac-gtw.qovery.io",
   "dependencies": {
     "@fluentui/react": "^8.29.0",
     "@testing-library/jest-dom": "^5.11.4",

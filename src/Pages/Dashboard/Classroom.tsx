@@ -10,10 +10,9 @@ import {
   DatePicker,
   defaultDatePickerStrings,
 } from '@fluentui/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SectionHeading } from '../../Components/Typography';
 import SimpleBar from 'simplebar-react';
-import { useHistory } from 'react-router';
 import ClassroomCard from '../../Components/ClassroomCard';
 
 const rootStyles: Partial<IStackStyles> = {
@@ -47,23 +46,6 @@ const hidenOnlargeViewport = mergeStyles({
   },
 });
 
-const timeTableCardStyle: Partial<IStackStyles> = {
-  root: {
-    width: 400,
-    minWidth: 360,
-    cursor: 'pointer',
-    height: 120,
-    marginRight: '1rem',
-  },
-};
-
-const classroomPreviewStyles = mergeStyles(timeTableCardStyle.root, {
-  marginBottom: 15,
-  '.ms-DocumentCardPreview': {
-    maxHeight: 'auto',
-  },
-});
-
 const SectionTokens: IStackTokens = {
   childrenGap: 15,
 };
@@ -89,14 +71,78 @@ const verticalScrollSectionStyles = mergeStyles({
   },
 });
 
-const Classroom: React.FC<{userDetails: any}> = ({userDetails}) => {
+const Classroom: React.FC<{ userDetails: any }> = ({ userDetails }) => {
   const [firstDayOfWeek] = React.useState(DayOfWeek.Sunday);
   const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
-  const history = useHistory();
+  const [upcomingClasses, setUpcomingClasses] = React.useState<any>([]);
+  const [timeTable, setTimeTable] = React.useState<any>([]);
+  useEffect(() => {
+    if (userDetails) {
+      console.log(selectedDate);
+      const { section } = userDetails;
+      if (section) {
+        const dayToday = new Date(selectedDate).getDay();
+        const classesToday = section.schedule[dayToday];
+        setTimeTable([]);
+        classesToday.forEach((classData: any) => {
+          classData.subjectData = section.subjects.find(
+            (subject: any) => subject._id === classData.subject
+          );
+          classData.date = new Date(selectedDate);
+          setTimeTable((data: any) => [...data, classData]);
+        });
+      }
+    }
+  }, [selectedDate, userDetails]);
+  useEffect(() => {
+    if (userDetails) {
+      const { section } = userDetails;
+      if (section) {
+        const dayToday = new Date().getDay();
+        const currentHour = new Date().getHours();
+        const classesToday = section.schedule[dayToday];
+        const upcomingClasses: any[] = [];
+
+        classesToday.forEach((classData: any) => {
+          classData.subjectData = section.subjects.find(
+            (subject: any) => subject._id === classData.subject
+          );
+          // setTimeTable((data: any) => [...data, classData]);
+          if (classData.startTime > currentHour) {
+            upcomingClasses.push(classData);
+          }
+        });
+        if (upcomingClasses.length < 4) {
+          let lengthToAdd = 4 - upcomingClasses.length;
+          let _day = 1;
+          let _date = 1;
+          while (lengthToAdd > 0) {
+            if (section.schedule[dayToday + _day]) {
+              lengthToAdd -= section.schedule[dayToday + _day].length;
+              const classes = section.schedule[dayToday + _day];
+              // eslint-disable-next-line
+              classes.forEach((classData: any) => {
+                classData.subjectData = section.subjects.find(
+                  (subject: any) => subject._id === classData.subject
+                );
+                classData.date = new Date();
+                classData.date.setDate(classData.date.getDate() + _date);
+                upcomingClasses.push(classData);
+              });
+            }
+            _day++;
+            _date++;
+            if (_day + dayToday >= 7) _day = -dayToday;
+          }
+        }
+        setUpcomingClasses(upcomingClasses);
+      }
+    }
+  }, [userDetails]);
   return (
     <Stack styles={rootStyles} tokens={{ childrenGap: 40 }}>
       <Stack className={SectionStyles} tokens={SectionTokens}>
-        <SectionHeading padTop title="Upcoming Classes" align="left" />
+        <SectionHeading padTop title="Upcoming Sessions" align="left" />
         {/* <Stack horizontal> */}
         <SimpleBar
           className={scrollSectionStyles}
@@ -105,10 +151,12 @@ const Classroom: React.FC<{userDetails: any}> = ({userDetails}) => {
             height: 180,
           }}
         >
-         <ClassroomCard /> 
-         <ClassroomCard /> 
-         <ClassroomCard /> 
-         <ClassroomCard /> 
+          {!upcomingClasses.length && (
+            <SectionHeading title="No sessions" align="center" color="gray" />
+          )}
+          {upcomingClasses.map((classData: any) => (
+            <ClassroomCard key={Math.random()} classData={classData} />
+          ))}
         </SimpleBar>
         {/* </Stack> */}
       </Stack>
@@ -128,9 +176,9 @@ const Classroom: React.FC<{userDetails: any}> = ({userDetails}) => {
               className={verticalScrollSectionStyles}
               style={{ maxHeight: 300, width: '100%' }}
             >
-          <ClassroomCard />
-          <ClassroomCard />
-          <ClassroomCard />
+              {timeTable.map((classData: any) => (
+                <ClassroomCard key={Math.random()} classData={classData} />
+              ))}
             </SimpleBar>
           </Stack>
           <Calendar
@@ -153,9 +201,16 @@ const Classroom: React.FC<{userDetails: any}> = ({userDetails}) => {
               height: '230px',
             }}
           >
-          <ClassroomCard />
-          <ClassroomCard />
-          <ClassroomCard />
+            {timeTable.length === 0 && (
+              <SectionHeading
+                title="No classes to display"
+                align="center"
+                color="gray"
+              />
+            )}
+            {timeTable.map((classData: any) => (
+              <ClassroomCard key={Math.random()} classData={classData} />
+            ))}
           </SimpleBar>
         </Stack>
       </Stack>

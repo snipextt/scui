@@ -24,7 +24,7 @@ import {
 import { createPersona, handleNavbarLinkClick, useMenuProps } from './utils';
 import { useBoolean } from '@fluentui/react-hooks';
 
-const Navbar: React.FC<{userDetails: any}> = ({userDetails}) => {
+const Navbar: React.FC<{ userDetails: any }> = ({ userDetails }) => {
   const personaRef = useRef<any>(null);
   const [profileContextMenuVisible, setProfileContextMenuVisible] =
     useState(false);
@@ -57,11 +57,6 @@ const Navbar: React.FC<{userDetails: any}> = ({userDetails}) => {
               key="classroom"
             ></PivotItem>
             <PivotItem
-              headerText="Assignments"
-              itemKey="assignments"
-              key="assignments"
-            ></PivotItem>
-            <PivotItem
               headerText="Teachers"
               itemKey="teachers"
               key="teachers"
@@ -89,7 +84,10 @@ const Navbar: React.FC<{userDetails: any}> = ({userDetails}) => {
               {...profilePersona}
               initialsColor={PersonaInitialsColor.blue}
               imageInitials={userDetails?.name?.split('')[0].toUpperCase()}
-              text={userDetails?.name?.split(' ').map((c: string)=> c.charAt(0).toUpperCase() + c.slice(1)).join(' ')}
+              text={userDetails?.name
+                ?.split(' ')
+                .map((c: string) => c.charAt(0).toUpperCase() + c.slice(1))
+                .join(' ')}
               secondaryText={userDetails?.section?.name}
               size={PersonaSize.size40}
               imageAlt="Student"
@@ -114,7 +112,7 @@ const Navbar: React.FC<{userDetails: any}> = ({userDetails}) => {
         onDismiss={dismissPanel}
         closeButtonAriaLabel="Close"
       >
- <Stack>
+        <Stack>
           <Persona
             {...profilePersona}
             initialsColor={PersonaInitialsColor.blue}
