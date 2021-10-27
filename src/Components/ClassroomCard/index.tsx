@@ -61,7 +61,10 @@ const previewPropsUsingIcon: IDocumentCardPreviewProps = {
 
 // const documentCardActions: IButtonProps[] = [];
 
-const ClassroomCard: React.FC<{ classData?: any }> = ({ classData }) => {
+const ClassroomCard: React.FC<{ classData?: any; click?: Function }> = ({
+  classData,
+  click,
+}) => {
   const history = useHistory();
   const [classTime, setClassTime] = React.useState('');
   const [className, setClassName] = React.useState('');
@@ -81,9 +84,12 @@ const ClassroomCard: React.FC<{ classData?: any }> = ({ classData }) => {
   return (
     <DocumentCard
       onClick={() => {
-        history.push('/virtual-classroom/lodge', {
-          classData,
-        });
+        if (click) {
+          let isValidSession = click();
+          if (isValidSession) {
+            history.push('/virtual-classroom/lodge', classData);
+          }
+        } else return;
       }}
       className={classroomPreviewStyles}
       type={DocumentCardType.compact}

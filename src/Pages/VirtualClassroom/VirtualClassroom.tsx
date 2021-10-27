@@ -14,6 +14,7 @@ import { useToggleCamera } from './hooks';
 import { Client, LocalStream, RemoteStream } from 'ion-sdk-js';
 import { IonSFUJSONRPCSignal } from 'ion-sdk-js/lib/signal/json-rpc-impl';
 import ParticipantAudio from './ParticipantAudio';
+import { useLocation } from 'react-router';
 
 const rootStyles: Partial<IStackItemStyles> = {
   root: {
@@ -86,7 +87,7 @@ const hostStyles: Partial<ITooltipHostStyles> = {
 let remoteStreams: any = {};
 
 const VirtualClassroom: React.FC = () => {
-  // const classId = new URLSearchParams(useLocation().search).get('id');
+  const location = useLocation();
   const leaveClassTTID = useId('tt');
   const DefenClassTTID = useId('tt');
   const MuteClassTTID = useId('tt');
@@ -129,10 +130,11 @@ const VirtualClassroom: React.FC = () => {
   };
 
   useEffect(() => {
-    document
-      .querySelector('#root > div')!
-      .requestFullscreen()
-      .catch(console.error);
+    console.log(location.state);
+    // document
+    //   .querySelector('#root > div')!
+    //   .requestFullscreen()
+    //   .catch(console.error);
     let signal = new IonSFUJSONRPCSignal('wss://treaclecake.ninja/ws');
     signal.onerror = console.error;
     let client = new Client(signal);
@@ -163,7 +165,7 @@ const VirtualClassroom: React.FC = () => {
       }
     };
     signal.onerror = alert;
-  }, [userMediaStream]);
+  }, [userMediaStream, location.state]);
 
   return (
     <>

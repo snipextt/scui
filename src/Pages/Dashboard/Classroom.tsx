@@ -9,11 +9,17 @@ import {
   Separator,
   DatePicker,
   defaultDatePickerStrings,
+  ContextualMenu,
+  DialogType,
+  Dialog,
+  DialogFooter,
+  PrimaryButton,
 } from '@fluentui/react';
 import React, { useEffect } from 'react';
 import { SectionHeading } from '../../Components/Typography';
 import SimpleBar from 'simplebar-react';
 import ClassroomCard from '../../Components/ClassroomCard';
+import { useId, useBoolean } from '@fluentui/react-hooks';
 
 const rootStyles: Partial<IStackStyles> = {
   root: {
@@ -71,11 +77,42 @@ const verticalScrollSectionStyles = mergeStyles({
   },
 });
 
+const dialogStyles = { main: { maxWidth: 450 } };
+const dragOptions = {
+  moveMenuItemText: 'Move',
+  closeMenuItemText: 'Close',
+  menu: ContextualMenu,
+  keepInBounds: true,
+};
+
+const dialogContentProps = {
+  type: DialogType.normal,
+  title: 'Message',
+  closeButtonAriaLabel: 'Close',
+  subText: "This session has not started yet! Please check when it's time.",
+};
+
 const Classroom: React.FC<{ userDetails: any }> = ({ userDetails }) => {
   const [firstDayOfWeek] = React.useState(DayOfWeek.Sunday);
   const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
   const [upcomingClasses, setUpcomingClasses] = React.useState<any>([]);
   const [timeTable, setTimeTable] = React.useState<any>([]);
+  const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
+  const [isDraggable] = useBoolean(false);
+  const labelId: string = useId('dialogLabel');
+  const subTextId: string = useId('subTextLabel');
+
+  const modalProps = React.useMemo(
+    () => ({
+      titleAriaId: labelId,
+      subtitleAriaId: subTextId,
+      isBlocking: false,
+      styles: dialogStyles,
+      dragOptions: isDraggable ? dragOptions : undefined,
+    }),
+    [isDraggable, labelId, subTextId]
+  );
+
   useEffect(() => {
     if (userDetails) {
       console.log(selectedDate);
@@ -108,7 +145,10 @@ const Classroom: React.FC<{ userDetails: any }> = ({ userDetails }) => {
             (subject: any) => subject._id === classData.subject
           );
           // setTimeTable((data: any) => [...data, classData]);
-          if (classData.startTime > currentHour) {
+          if (
+            classData.startTime >= currentHour &&
+            classData.endTime > currentHour
+          ) {
             upcomingClasses.push(classData);
           }
         });
@@ -155,7 +195,26 @@ const Classroom: React.FC<{ userDetails: any }> = ({ userDetails }) => {
             <SectionHeading title="No sessions" align="center" color="gray" />
           )}
           {upcomingClasses.map((classData: any) => (
-            <ClassroomCard key={Math.random()} classData={classData} />
+            <ClassroomCard
+              key={Math.random()}
+              classData={classData}
+              click={() => {
+                const { startTime, endTime, date } = classData;
+                const dateToday = new Date();
+                if (date.getDate() === dateToday.getDate()) {
+                  if (
+                    date.getHours() >= startTime &&
+                    date.getHours() < endTime
+                  ) {
+                    return true;
+                  } else {
+                    toggleHideDialog();
+                  }
+                } else {
+                  toggleHideDialog();
+                }
+              }}
+            />
           ))}
         </SimpleBar>
         {/* </Stack> */}
@@ -232,6 +291,16 @@ const Classroom: React.FC<{ userDetails: any }> = ({ userDetails }) => {
           />
         </Stack>
       </Stack>
+      <Dialog
+        hidden={hideDialog}
+        onDismiss={toggleHideDialog}
+        dialogContentProps={dialogContentProps}
+        modalProps={modalProps}
+      >
+        <DialogFooter>
+          <PrimaryButton onClick={toggleHideDialog} text="OK" />
+        </DialogFooter>
+      </Dialog>
     </Stack>
   );
 };

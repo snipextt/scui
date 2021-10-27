@@ -29,7 +29,7 @@ function App() {
           <Route path="/dashboard">
             <Dashboard />
           </Route>
-          <Route path="/virtual-classroom/lodge*">
+          <Route path="/virtual-classroom/lodge">
             <VirtualClassroom />
           </Route>
         </Switch>
