@@ -15,6 +15,7 @@ import { Client, LocalStream, RemoteStream } from 'ion-sdk-js';
 import { IonSFUJSONRPCSignal } from 'ion-sdk-js/lib/signal/json-rpc-impl';
 import ParticipantAudio from './ParticipantAudio';
 import { useLocation } from 'react-router';
+import { io } from 'socket.io-client';
 
 const rootStyles: Partial<IStackItemStyles> = {
   root: {
@@ -38,7 +39,7 @@ const meetingControlsContainerStyles: Partial<IStackItemStyles> = {
 
 const _meetingControlsStyles: Partial<IStackItemStyles> = {
   root: {
-    width: '25%',
+    width: '13%',
     background: '#fff',
     borderRadius: 20,
     padding: 8,
@@ -49,14 +50,14 @@ const _meetingControlsStyles: Partial<IStackItemStyles> = {
 };
 
 const meetingControlsStyles = mergeStyles(_meetingControlsStyles.root, {
-  '@media(max-width: 1200px)': {
-    width: '40%',
+  '@media(max-width: 1400px)': {
+    width: '22%',
   },
-  '@media(max-width: 830px)': {
-    width: '50%',
+  '@media(max-width: 890px)': {
+    width: '32%',
   },
   '@media(max-width: 650px)': {
-    width: '70%',
+    width: '40%',
   },
 });
 
@@ -106,18 +107,6 @@ const VirtualClassroom: React.FC = () => {
     Array<RemoteStream>
   >([]);
   const [isVideoActive, setIsVideoActive] = useState(false);
-  // const screenRef = useRef<any>();
-
-  // const toggleShareScreen = useToggleScreenshare(
-  //   userMediaStream,
-  //   screenShareStreamId,
-  //   setScreenShareStreamId
-  // );
-  // const toggleAudio = useToggleAudio(
-  //   userMediaStream,
-  //   audioShareStreamId,
-  //   setAudioShareStreamId
-  // );
   const ToggleCamera = useToggleCamera(
     userMediaStream,
     cameraShareStreamId,
@@ -130,41 +119,58 @@ const VirtualClassroom: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log(location.state);
+    const state: any = location.state;
+    console.log(state);
+    if (!state || !state.subject || !state.subjectData) {
+      // redirect back
+    }
+    const socket = io('/classroom', {
+      auth: {
+        token: sessionStorage.getItem('authToken'),
+      },
+    });
+    socket.on('connect_error', (err) => {
+      console.log(err.message); // prints the message associated with the error
+    });
+    socket.on('error', console.log);
+    socket.emit('join', state.subjectData.code);
+    socket.on('message', console.log);
+    socket.on('joined', (sessionID: any) => {
+      socket.send('hello');
+      let signal = new IonSFUJSONRPCSignal('wss://treaclecake.ninja/ws');
+      signal.onerror = console.error;
+      let client = new Client(signal);
+      setSignal(signal);
+      setClient(client);
+      signal.onopen = () => {
+        client.join('classroom', sessionID).then(() => {
+          console.log('Joined room');
+        });
+      };
+      client.ontrack = (track: MediaStreamTrack, stream: RemoteStream) => {
+        remoteStreams[stream.id] = stream;
+        if (track.kind === 'video') {
+          stream.preferLayer('high');
+          setIsVideoActive(true);
+          videoRef.current!.srcObject = stream;
+          videoRef.current!.play();
+          (stream as any).oninactive = () => {
+            videoRef.current!.srcObject = null;
+            setIsVideoActive(false);
+          };
+        } else {
+          (stream as any).oninactive = () => {
+            // to implment
+          };
+          setRemoteAudioStreams((r) => [...r, stream]);
+        }
+      };
+      signal.onerror = alert;
+    });
     // document
     //   .querySelector('#root > div')!
     //   .requestFullscreen()
     //   .catch(console.error);
-    let signal = new IonSFUJSONRPCSignal('wss://treaclecake.ninja/ws');
-    signal.onerror = console.error;
-    let client = new Client(signal);
-    setSignal(signal);
-    setClient(client);
-    signal.onopen = () => {
-      client.join('classroom', `${Math.random()}`).then(() => {
-        console.log('Joined room');
-      });
-    };
-    client.ontrack = (track: MediaStreamTrack, stream: RemoteStream) => {
-      remoteStreams[stream.id] = stream;
-      if (track.kind === 'video') {
-        stream.preferLayer('high');
-        setIsVideoActive(true);
-        videoRef.current!.srcObject = stream;
-        videoRef.current!.play();
-        (stream as any).oninactive = () => {
-          videoRef.current!.srcObject = null;
-          setIsVideoActive(false);
-        };
-      } else {
-        console.log('here');
-        (stream as any).oninactive = () => {
-          // to implment
-        };
-        setRemoteAudioStreams((r) => [...r, stream]);
-      }
-    };
-    signal.onerror = alert;
   }, [userMediaStream, location.state]);
 
   return (
@@ -172,7 +178,7 @@ const VirtualClassroom: React.FC = () => {
       <Stack styles={rootStyles}>
         <Stack styles={meetingControlsContainerStyles} horizontal>
           <Stack className={meetingControlsStyles} horizontal>
-            <TooltipHost
+            {/* <TooltipHost
               content="Leave Classroom"
               id={leaveClassTTID}
               calloutProps={calloutProps}
@@ -207,7 +213,7 @@ const VirtualClassroom: React.FC = () => {
                   className={iconClass}
                 />
               </Stack>
-            </TooltipHost>
+            </TooltipHost> */}
 
             <TooltipHost
               content="Toggle Microphone"

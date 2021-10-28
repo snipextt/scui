@@ -146,7 +146,7 @@ const Classroom: React.FC<{ userDetails: any }> = ({ userDetails }) => {
           );
           // setTimeTable((data: any) => [...data, classData]);
           if (
-            classData.startTime >= currentHour &&
+            classData.startTime <= currentHour &&
             classData.endTime > currentHour
           ) {
             upcomingClasses.push(classData);
