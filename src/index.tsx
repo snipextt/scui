@@ -4,8 +4,11 @@ import { mergeStyles, initializeIcons } from '@fluentui/react';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'simplebar/dist/simplebar.min.css';
+import axios from 'axios';
 
 initializeIcons();
+
+axios.defaults.baseURL = 'https://z774173c6-z606665ac-gtw.qovery.io';
 
 mergeStyles({
   ':global(body,html,#root)': {
